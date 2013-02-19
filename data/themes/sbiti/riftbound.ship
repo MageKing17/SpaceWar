@@ -1,0 +1,11 @@
+specials:
+  - teleportation
+  - regeneration
+phasers:
+  - [0,0,0]
+  - [63,63,0]
+  - [127,127,0]
+  - [191,191,0]
+  - [255,255,0]
+colorkey:   [255,255,255]
+image:      riftbound.png

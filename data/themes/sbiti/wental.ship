@@ -1,0 +1,5 @@
+specials:
+  - regeneration
+phasers:    [255,0,255]
+colorkey:   [255,255,255]
+image:      wental.png

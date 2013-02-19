@@ -1,0 +1,5 @@
+specials:
+  - ablative
+phasers:    [200,200,255]
+colorkey:   [255,255,255]
+image:      terran.png

@@ -1,0 +1,4 @@
+specials:
+  - sentry
+colorkey:   [255,255,255]
+image:      sentry.png

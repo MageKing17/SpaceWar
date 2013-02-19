@@ -1,0 +1,13 @@
+phasers:    [255, 0, 0]
+torpedo:    [255, 0, 0]
+
+Races:
+    terran:     terran.ship
+    psiloth:    psiloth.ship
+    zlorg:      zlorg.ship
+    wental:     wental.ship
+    riftbound:  riftbound.ship
+
+Special:
+    sentry:     sentry.ship
+    random: [terran,psiloth,zlorg,wental,riftbound]

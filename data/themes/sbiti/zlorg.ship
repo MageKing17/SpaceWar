@@ -1,0 +1,10 @@
+specials:
+  - acceleration
+phasers:
+  - [255,0,0]
+  - [255,255,0]
+  - [0,255,0]
+  - [0,0,255]
+  - [255,0,255]
+colorkey:   [255,255,255]
+image:      zlorg.png
