@@ -1,5 +1,5 @@
                                     SpaceWar
-                                    v0.7.2.1
+                                    v0.7.2.2
                         February "1 Game A Month" entry
                               © 2013 by MageKing17
                               MageKing17@gmail.com
@@ -11,6 +11,7 @@
 Key:
   + New feature
   ? Changed feature
+  - Removed feature
   ! Bugfix
 
 v0.1 - Initial Release
@@ -122,6 +123,12 @@ v0.7.2.1 - Icon-ified Version
   + Added an icon, showing various S:BitI ships shooting at each other. Looks a
     lot more interesting than the default Windows icon, at least.
 
+v0.7.2.2 - GitHub Version
+  - Removed all but the S:BitI theme, and removed references to the removed
+    content.
+  ? While I was at it, slightly fixed up a couple alignment issues in the
+    localization file.
+
 ################################################################################
 
             CONTROLS:
@@ -170,36 +177,24 @@ could really use some work, too. Still, you can make a character and rank it up
 just like in the original, so if you never played multiplayer, there's
 effectively no difference!
 
-You can choose from one of five different ships (well, sort of ten, but not
-really; I'll get into that later) with different special abilities. The five
-classic SpaceWar ships are as follows:
+You can choose from one of five different ships with different special
+abilities. The included "S:BitI" theme ("S:BitI" stands for "Space: Battles in
+the Infinite", a card game a friend of mine and I made that never went
+anywhere), has the following five ships:
 
-Federation	- Ablative Shielding (takes half damage when you don't attack)
-Klingon		- Cloaking Device (invisible to enemies when you don't attack,
-			but takes double damage)
-Tholian		- Hyper-Acceleration (can accelerate twice as fast as normal if
-			you don't attack)
-Dominion	- Regenerative Shielding (regenerates 5 shield points after not
-			attacking)
-Borg		- Transwarp Drive (can teleport anywhere on the board by not
-			attacking) + Regenerative Shielding (doesn't apply if
-			you teleported instead)
+Terran		- Ablative Armor (take half damage when not attacking)
+Psiloth		- Psionic Cloak (turn invisible when not attacking, but take
+                      twice as much damage)
+Zlorg		- Rapid Acceleration (accelerate or decelerate twice as quickly
+                      when not attacking)
+Wental		- Regeneration (regenerate 5 shields if you don't attack)
+Riftbound	- Subspace Jumpdrive (If you try to move to a hex you normally
+                      couldn't while not attacking, you instantly teleport
+                      there, but your speed gets set to 0) + Regeneration (if
+                      your movement hex would otherwise be valid, you regenerate
+                      5 shields just like the Wental)
 
-In addition, while phasers are red, Tholian phasers are blue, and Borg phasers
-are green.
-
-I've added a "S:BitI" theme ("S:BitI" stands for "Space: Battles in the
-Infinite", a card game a friend of mine and I made that never went anywhere),
-which replaces the Star Trek ships with the races of S:BitI, including new
-graphics, captain names, ship names, and victory quotes:
-
-Terran		- Ablative Armor (equivilent to Ablative Shielding)
-Psiloth		- Psionic Cloak (take a wild guess)
-Zlorg		- Rapid Acceleration (ditto)
-Wental		- Regeneration (yup)
-Riftbound	- Subspace Jumpdrive + Regeneration (you guessed it!)
-
-For added fun, each S:BitI ship has a different phaser color (and some even have
+For added fun, each ship has a different phaser color (and some even have
 multiple colors):
 
 Terran		- Light blue (Ion Cannons ahoy!)
@@ -208,9 +203,9 @@ Zlorg		- Rainbow (cycles through Red, Yellow, Green, Blue, and Purple)
 Wental		- Purple (the dreaded Icelaser!)
 Riftbound	- Black fading to Yellow (because... well, it looks cool)
 
-You choose either the "Classic" or "S:BitI" theme when you start an instant 
-action round or create a new character (or, for extra silliness, you can choose
-"Super-Combo" and play with both sets at the same time).
+You can choose a theme when you start an instant action round or create a new
+character, but your only choice will be "Space: Battles in the Infinite" unless
+you add a new theme.
 
 Characters have a specific theme they always play with, but you can always just
 edit your character file to change their theme (it's the third line in the .chr
@@ -228,12 +223,9 @@ statistics, save your character, or quit to the main menu.
       BATTLE SETUP:
 
 Here you can add or remove AI ships or sentry guns, and choose their rank and
-race. If your theme is "Super-Combo", you'll even have three "random" options
-for ship races: Random Classic, Random S:BitI, and Random. As the names
-indicate, this allows you to have random ships that nonetheless fit a specific
-"subtheme". Once you have the setup you want, you can begin the battle. Every
-time you enter this menu, it has the same setup it had the last time you left
-it, so you can set it to your favourite settings and leave them there.
+race. Once you have the setup you want, you can begin the battle. Every time you
+enter this menu, it has the same setup it had the last time you left it, so you
+can set it to your favourite settings and leave them there.
 
       PLAYER SETUP:
 
@@ -298,10 +290,10 @@ Click on another ship to bring up the info box, containing the rank (always
 "Cadet" in instant action) of the captain, the captain's name, the name of the
 ship, its current shield strength, and its last recorded speed. You can right-
 click on your own ship to get the same info box, or left-click to bring up the
-command menu. Here you can choose where to move by clicking the "Dest" button,
-what action to take (by clicking on your current action; defaults to "Do
+command menu. Here you can choose where to move by clicking the "Destination"
+button, what action to take (by clicking on your current action; defaults to "Do
 nothing"), and if that action is firing a weapon, where to fire it by clicking
-the "Targ" button. If you want to go back to looking at your enemies' current
+the "Target" button. If you want to go back to looking at your enemies' current
 locations and info boxes, you can hit "Cancel" to close the command menu. If you
 click "Okay", the game will make sure your actions are valid (within your
 movement capabilities, for example) and then the turn will execute.
@@ -331,21 +323,14 @@ be busy focusing on whatever my March game is. If you want to talk to me about
 this game or anything else, my email address is at the top of this readme (but
 here it is again: MageKing17@gmail.com)
 
-Classic graphics, ship names, captain names, and victory quotes copied from the
-original SpaceWar, mostly for the nostalgia factor. If Michael Read ever sees
-this and cares, I can remove all the "classic" stuff from this clone.
-SpaceWar © 2001 by Michael Read.
+Hex grid graphics and sentry gun sprite copied from the original SpaceWar,
+mostly for the nostalgia factor. If Michael Read ever sees this and cares, I can
+remove all the "classic" stuff from this clone. SpaceWar © 2001 by Michael Read.
 
-Star Trek was created by Gene Roddenberry and is not even remotely close to
-being owned by me or anyone I know, and is used here in exactly the same way as
-it was in the original SpaceWar; with no intention of profiting from it, and for
-other fans to enjoy. I am in no way affiliated with CBS/Paramount, or the Star
-Trek franchise.
-
-Space: Battles in the Infinite is, however, mine, and I'd appreciate it if you
-talked to me before using anything from it. Not that I expect anyone to, but
-still; just throwing it out there. S:BitI graphics, ship names, captain names,
-and victory quotes were created by myself and S:BitI's co-creator.
+Space: Battles in the Infinite is my intellectual property, and I'd appreciate
+it if you talked to me before using anything from it. Not that I expect anyone
+to, but still; just throwing it out there. S:BitI graphics, ship names, captain
+names, and victory quotes were created by myself and S:BitI's co-creator.
 
 Sound effects were generated by me with sfxr by DrPetter. I love that tool so
 much.
