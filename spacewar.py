@@ -848,6 +848,8 @@ def ia_make_player(race):
         home_player = player
         ship_list.append(player)
         match_stats[player] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0, "phasers shot": 0, "phasers hit": 0, "torpedoes shot": 0, "torpedoes hit": 0, "kills-sentry": 0}
+        if not "sentry" in themes[THEME]["Special"]:
+            del match_stats[player]["kills-sentry"]
         for race in races:
             match_stats[player]["kills-"+race] = 0
         command_box = CommandBox(display, infofont)
@@ -928,7 +930,8 @@ def create_new_character(theme):
     ))
     for race in races:
         char["kills-"+race] = 0
-    char["kills-sentry"] = 0
+    if "sentry" in themes[THEME]["Special"]:
+        char["kills-sentry"] = 0
     global player_character
     player_character = char
     return campaign_menu()
@@ -968,6 +971,8 @@ def load_existing_character(name):
     for race in races:
         if not "kills-"+race in char:
             char["kills-"+race] = 0
+    if "sentry" in themes[THEME]["Special"] and not "kills-sentry" in char:
+        char["kills-sentry"] = 0
     player_character = char
     load_ship_graphics()
 
@@ -985,6 +990,8 @@ def start_battle():
     home_player = player
     ship_list.append(player)
     match_stats[player] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0, "phasers shot": 0, "phasers hit": 0, "torpedoes shot": 0, "torpedoes hit": 0, "kills-sentry": 0}
+    if not "sentry" in themes[THEME]["Special"]:
+        del match_stats[player]["kills-sentry"]
     for race in races:
         match_stats[player]["kills-"+race] = 0
     command_box = CommandBox(display, infofont)
