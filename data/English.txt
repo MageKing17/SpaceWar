@@ -1,4 +1,4 @@
-<theme-sbiti>
+﻿<theme-sbiti>
 Space: Battles in the Infinite
 <terran>
 Terran
@@ -219,9 +219,9 @@ Team battle: Yes
 <battle-setup-team battle-off>
 Team battle: No
 <player-setup-change name>
-Change your character's name:
+Change your character's name (Escape cancels):
 <player-setup-change ship>
-Change your ship's name:
+Change your ship's name (Escape cancels):
 <player-setup-choose race>
 Choose your ship's race:
 <stat-increase>
@@ -275,8 +275,10 @@ Yes
 No
 <character-saved>
 Character saved.
+<character-not-saved>
+Save cancelled. Your progress has NOT been saved!
 <save-character-prompt>
-Save your character:
+Save your character (Escape cancels):
 <menu-campaign-title>
 Make your selection, {name}:
 <menu-battle-setup>

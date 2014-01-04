@@ -1114,8 +1114,9 @@ def battle_setup():
 def change_captain_name():
     global text_entry
 
-    def callback(text):
-        player_character["name"] = text
+    def callback(text=None):
+        if text:
+            player_character["name"] = text
         player_setup()
 
     text_entry = TextEntry(load_text("player-setup-change name"), player_character["name"], callback)
@@ -1124,8 +1125,9 @@ def change_captain_name():
 def change_ship_name():
     global text_entry
 
-    def callback(text):
-        player_character["ship"] = text
+    def callback(text=None):
+        if text:
+            player_character["ship"] = text
         player_setup()
 
     text_entry = TextEntry(load_text("player-setup-change ship"), player_character["ship"], callback)
@@ -1217,7 +1219,11 @@ def view_statistics():
 def save_character():
     global text_entry
 
-    def callback(text):
+    def callback(text=None):
+        if not text:
+            message_box = Messagebox(load_text("character-not-saved"), infofont)
+            campaign_menu()
+            return
         char = dict(**player_character)
         char["battle-settings"] = battle_settings
         del char["rank"]
@@ -1442,7 +1448,7 @@ while True:
                 if event.key == pygame.K_BACKSPACE:
                     text_entry.text = text_entry.text[:-1]
                 elif event.key == pygame.K_ESCAPE:
-                    text_entry = text_entry.callback(text_entry.start)
+                    text_entry = text_entry.callback()
                 elif event.key in (pygame.K_RETURN, pygame.K_KP_ENTER):
                     text_entry = text_entry.callback(text_entry.text)
                 elif event.unicode:
