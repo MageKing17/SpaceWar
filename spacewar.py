@@ -1410,9 +1410,9 @@ def start_turn():
             ship.speed = hex_distance(coords_to_hex(ship.pos), ship.movement)
             dx, dy = ship.pos[0] - ship.move_target[0], ship.pos[1] - ship.move_target[1]
             if dx or dy:
-                if dx < 0 and dx <= -abs(dy):
+                if dx < 0 and dx < -abs(dy):
                     ship.rotate(270)
-                elif dx > 0 and dx >= abs(dy):
+                elif dx > 0 and dx > abs(dy):
                     ship.rotate(90)
                 elif dy > 0:
                     ship.rotate(0)
