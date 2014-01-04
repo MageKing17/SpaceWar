@@ -42,38 +42,35 @@ BACKGROUND = (255, 255, 255)
 
 SENTRY_INVALID = ((1, 11), (2, 10), (3, 10), (3, 9), (4, 8), (5, 8), (6, 7), (7, 7), (7, 6), (8, 6), (8, 5), (9, 5), (10, 4), (11, 4), (12, 3), (12, 2), (13, 2), (14, 1))
 
-RANKS = OrderedDict((
-                    ("cadet", 0),
-                    ("ensign", 1),
-                    ("lieutenant jg", 2),
-                    ("lieutenant", 3),
-                    ("commander", 4),
-                    ("captain", 5),
-                    ("commodore", 6),
-                    ("rear admiral", 7),
-                    ("vice admiral", 8),
-                    ("admiral", 9),
-                    ("fleet admiral", 10),
-                    ))
+RANKS = (
+    "cadet",
+    "ensign",
+    "lieutenant jg",
+    "lieutenant",
+    "commander",
+    "captain",
+    "commodore",
+    "rear admiral",
+    "vice admiral",
+    "admiral",
+    "fleet admiral",
+)
 
-RANK_XP = OrderedDict((
-                      ("cadet", 1500),
-                      ("ensign", 5000),
-                      ("lieutenant jg", 12000),
-                      ("lieutenant", 25000),
-                      ("commander", 50000),
-                      ("captain", 100000),
-                      ("commodore", 200000),
-                      ("rear admiral", 350000),
-                      ("vice admiral", 550000),
-                      ("admiral", 800000),
-                      ))
+XP_VALUES = [1500, 5000, 12000, 25000]
+# Pad the XP_VALUES until we have enough for every rank (except the final one).
+while len(XP_VALUES) < len(RANKS) - 1:
+    i = len(XP_VALUES) - 3
+    XP_VALUES.append(25000*i**2 - 25000*i + 50000)
+# Alternatively, if our list of ranks is very short for some reason...
+while len(XP_VALUES) >= len(RANKS):
+    XP_VALUES.pop()
+
+RANK_XP = OrderedDict(zip(RANKS, XP_VALUES))
 
 RANK_PROMOTE = OrderedDict()
 
-rank_list = tuple(RANKS)
-for i, rank in enumerate(rank_list[:-1]):
-    RANK_PROMOTE[rank] = rank_list[i+1]
+for i, rank in enumerate(RANKS[:-1]):
+    RANK_PROMOTE[rank] = RANKS[i+1]
 
 STATS = {
     "shields": {
@@ -827,7 +824,7 @@ rapid_end = False
 game_over = False
 quit = False
 command_box = None
-battle_settings = [False, (rank_list[0], "random"), None, None]
+battle_settings = [False, (RANKS[0], "random"), None, None]
 num_enemies = 1
 
 
@@ -844,7 +841,7 @@ def ia_choose_theme(theme):
 def ia_make_player(race):
     def callback(race=race):
         global player, command_box, home_player
-        player = Ship(race, hex_to_coords(1, 1), 180, rank_list[0], load_text("default-captain"), load_text("default-ship"), 100, 20, 30, 5, human=True)
+        player = Ship(race, hex_to_coords(1, 1), 180, RANKS[0], load_text("default-captain"), load_text("default-ship"), 100, 20, 30, 5, human=True)
         home_player = player
         ship_list.append(player)
         match_stats[player] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0, "phasers shot": 0, "phasers hit": 0, "torpedoes shot": 0, "torpedoes hit": 0, "kills-sentry": 0}
@@ -895,7 +892,7 @@ def ia_make_enemy(race):
                 valid_ship_names = ship_names
             e_captain = random.choice(valid_captain_names)
             e_name = random.choice(valid_ship_names)
-        enemy = Ship(race, hex_to_coords(*((14, 10), (1, 11), (14, 1))[len(ship_list)-1]), (180 if len(ship_list) == 2 and not race == "sentry" else 0), rank_list[0], e_captain, e_name, (200 if race == "sentry" else 100), 20, 30, (0 if race == "sentry" else 5))
+        enemy = Ship(race, hex_to_coords(*((14, 10), (1, 11), (14, 1))[len(ship_list)-1]), (180 if len(ship_list) == 2 and not race == "sentry" else 0), RANKS[0], e_captain, e_name, (200 if race == "sentry" else 100), 20, 30, (0 if race == "sentry" else 5))
         ship_list.append(enemy)
         match_stats[enemy] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0}
         if len(ship_list) <= num_enemies:
@@ -913,7 +910,7 @@ def create_new_character(theme):
         ("ship", load_text("default-ship")),
         ("theme", theme),
         ("race", "random"),
-        ("rank", rank_list[0]),
+        ("rank", RANKS[0]),
         ("xp", 0),
         ("bonus", 0),
         ("shields", 100),
@@ -946,7 +943,7 @@ def load_existing_character(name):
     with open(name, "r") as f:
         char = yaml.safe_load(f)
         char["bonus"] = 0
-        char["rank"] = rank_list[0]
+        char["rank"] = RANKS[0]
         while char["rank"] in RANK_XP and char["xp"] > RANK_XP[char["rank"]]:
             char["rank"] = RANK_PROMOTE[char["rank"]]
             char["bonus"] += 5
@@ -1000,7 +997,7 @@ def start_battle():
             rank, race = slot
             if race in themes[THEME]["Special"]:
                 race = random.choice(themes[THEME]["Special"][race])
-            points = RANKS[rank] * 5
+            points = RANKS.index(rank) * 5
             stats = {}
             for stat, data in STATS.items():
                 stats[stat] = data["min"]
@@ -1031,7 +1028,7 @@ def start_battle():
             ship_list.append(enemy)
             match_stats[enemy] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0}
         elif slot == "sentry":
-            enemy = Ship("sentry", hex_to_coords(*((14, 10), (1, 11), (14, 1))[i]), 0, rank_list[0], "", load_text("sentry"), 200, 20, 30, 0)
+            enemy = Ship("sentry", hex_to_coords(*((14, 10), (1, 11), (14, 1))[i]), 0, RANKS[0], "", load_text("sentry"), 200, 20, 30, 0)
             ship_list.append(enemy)
             match_stats[enemy] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0}
     team_game = battle_settings[0]
@@ -1042,7 +1039,7 @@ def start_battle():
 
 def add_ai_slot(num):
     def callback(num=num):
-        battle_settings[num] = (rank_list[0], "random")
+        battle_settings[num] = (RANKS[0], "random")
         return change_ai_setting(num)()
     return callback
 
@@ -1667,11 +1664,11 @@ while True:
                             rank = 0
                             if ship in winning_team:
                                 vic = 500 // len(winning_team)
-                                s_rank = RANKS[ship.rank]
+                                s_rank = RANKS.index(ship.rank)
                                 for other in match_stats:
                                     if other in winning_team:
                                         continue
-                                    o_rank = RANKS[other.rank]
+                                    o_rank = RANKS.index(other.rank)
                                     if o_rank > s_rank:
                                         rank += 100 * (o_rank - s_rank)
                             dam, teamdam = stats["damage"] * 2, stats["teamdamage"] * 2
