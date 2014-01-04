@@ -352,8 +352,10 @@ $Statistics:
    Damage: {dam:<5}	Team damage: {teamdam}
   Victory: {vic:<5}	 Rank bonus: {rank_bonus}
 	Total points: {total}
-<extras-player>
- *PLAYER*
+<extras-you>
+ **YOU**
+<extras-human>
+ *HUMAN*
 <extras-dead>
  *DEAD*
 <promotion>

@@ -803,6 +803,7 @@ def screenshot(screen):
     pygame.image.save(screen, os.path.join("screenshots", "screenshot%04d.png" % (max + 1)))
 
 player_character = None
+home_player = None
 player = None
 ship_list = []
 dead_list = []
@@ -842,8 +843,9 @@ def ia_choose_theme(theme):
 
 def ia_make_player(race):
     def callback(race=race):
-        global player, command_box
+        global player, command_box, home_player
         player = Ship(race, hex_to_coords(1, 1), 180, rank_list[0], load_text("default-captain"), load_text("default-ship"), 100, 20, 30, 5, human=True)
+        home_player = player
         ship_list.append(player)
         match_stats[player] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0, "phasers shot": 0, "phasers hit": 0, "torpedoes shot": 0, "torpedoes hit": 0, "kills-sentry": 0}
         for race in races:
@@ -971,7 +973,7 @@ def load_existing_character(name):
 
 
 def start_battle():
-    global message_box
+    global message_box, home_player
     if not any([True for ai in battle_settings[1:] if ai and not ai == "sentry"]):
         message_box = Messagebox(load_text("no-players"), infofont)
         return selection_list
@@ -980,6 +982,7 @@ def start_battle():
     if race in themes[THEME]["Special"]:
         race = random.choice(themes[THEME]["Special"][race])
     player = Ship(race, hex_to_coords(1, 1), 180, player_character["rank"], player_character["name"], player_character["ship"], player_character["shields"], player_character["phasers"], player_character["torpedo"], player_character["engine"], human=True)
+    home_player = player
     ship_list.append(player)
     match_stats[player] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0, "phasers shot": 0, "phasers hit": 0, "torpedoes shot": 0, "torpedoes hit": 0, "kills-sentry": 0}
     for race in races:
@@ -1665,18 +1668,13 @@ while True:
                                     if o_rank > s_rank:
                                         rank += 100 * (o_rank - s_rank)
                             dam, teamdam = stats["damage"] * 2, stats["teamdamage"] * 2
-                            extras = (load_text("extras-player") if ship.human else "") + (load_text("extras-dead") if not ship in ship_list else "")
+                            extras = (load_text("extras-you") if ship == home_player else (load_text("extras-human") if ship.human else "")) + (load_text("extras-dead") if not ship in ship_list else "")
                             match_stats[ship]["total"] = total = dam + teamdam + vic + rank
                             rank_bonus = rank
                             rank = load_text("rank-"+ship.rank) if ship.rank else ""
                             text += "\n" + load_text("statistics-"+("sentry" if ship.type == "sentry" else "ship")).format(name=ship.name, rank=rank, captain=ship.captain, extras=extras, dam=dam, teamdam=teamdam, vic=vic, rank_bonus=rank_bonus, total=total)
                         if not instant_action:
-                            # Find the player, since our "player" variable got cleared
-                            for ship, stats in match_stats.items():
-                                if ship.human:
-                                    break
-                            else:
-                                raise Exception("Somehow, a campaign match ended without a human player ever being involved.")
+                            stats = match_stats[home_player]
                             for stat in stats:
                                 if stat in ("damage", "teamdamage", "victory", "rank", "total"):
                                     continue
@@ -1693,6 +1691,7 @@ while True:
                                 text += "\n\n" + load_text("promotion").format(rank=load_text("rank-"+player_character["rank"]), bonus=bonus)
                                 player_character["bonus"] += bonus
                         message_box = Messagebox(text, infofont)
+                        home_player = None
                         game_over = True
                 for ship in ship_list:
                     if ship.shot_recently:
