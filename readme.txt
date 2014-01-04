@@ -1,5 +1,5 @@
                                     SpaceWar
-                                    v0.7.2.3
+                                     v0.7.3
                         February "1 Game A Month" entry
                            © 2013-2014 by MageKing17
                               MageKing17@gmail.com
@@ -129,7 +129,7 @@ v0.7.2.2 - GitHub Version
   ? While I was at it, slightly fixed up a couple alignment issues in the
     localization file.
 
-v0.7.2.3 - "Oh Right, This Thing Still Exists" Version - January 4th, 2014
+v0.7.3 - "Oh Right, This Thing Still Exists" Version - January 4th, 2014
   ? Reformatted source code with the flake8 linter to make it less messy.
   ! Fixed divide-by-zero error if firing a Torpedo at your currently-occupied
     hex.

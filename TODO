@@ -1,0 +1,26 @@
+	IN NO PARTICULAR ORDER:
+
++ Completely refactor everything; this thing is basically a tech demo I made to
+test clicking on a hexagonal grid that slowly accumulated more and more
+features... like tumors. It's all horribly inefficient and poorly-hacked-
+together solutions to basic problems, with some bugfixes stuck on top like duct
+tape. Everything needs to be rewritten more-or-less from scratch to have a
+proper framework.
+
++ Once that's done, multiplayer would be a lot easier to implement.
+
++ Rewrite localization handling. I have a later, also-incomplete project with a
+much better handling of localization strings (including changing language at
+run-time rather than needing to edit an INI file), which also handles loading
+text from "mod" folders (which should be adaptable to SpaceWar's themes easily
+enough). The only reason this tattered monstrosity of a localization system got
+into the game in the first place is because it was the first solution I wrote
+that worked... and as the change log for v0.7.2 indicates, it only "worked" on
+filesystems that didn't care that it was re-reading the file every time it
+wanted to do... well, ANYTHING.
+
++ Decoupling graphics from game logic entirely would be nice, to allow for ships
+bigger than 9x9 pixels. This may or may not be doable before the massive
+refactoring effort.
+    + Of course, if it's not done before the massive refactoring, the massive
+      refactoring will include this and more as a matter of course.
