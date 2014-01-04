@@ -1298,7 +1298,7 @@ def fire_phaser(who, where, step):
     where = where[0]+4, where[1]+4
     origin = who.pos[0]+4, who.pos[1]+4
     dx, dy = where[0] - origin[0], where[1] - origin[1]
-    if dx == 0 and dy == 0:
+    if abs(dx) <= 0.01 and abs(dy) <= 0.01:
         dx = 100
     while where[0] > 0 and where[0] < 160 and where[1] > 0 and where[1] < 160:
         where = where[0] + dx, where[1] + dy
