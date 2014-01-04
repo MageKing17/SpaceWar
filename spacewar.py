@@ -594,8 +594,11 @@ class Torpedo(object):
         self.rect.center = pos
         self.pos = pos
         delta = target[0] - pos[0], target[1] - pos[1]
-        dist = math.hypot(*delta)
-        self.dx, self.dy = (delta[0] / dist) * 3, (delta[1] / dist) * 3
+        if abs(delta[0]) <= 0.01 and abs(delta[1]) <= 0.01:
+            self.dx, self.dy = 3.0, 0.0
+        else:
+            dist = math.hypot(*delta)
+            self.dx, self.dy = (delta[0] / dist) * 3, (delta[1] / dist) * 3
         self.firer = firer
         self.power = power
         self.color = color
