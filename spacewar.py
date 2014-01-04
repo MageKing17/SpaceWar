@@ -970,6 +970,7 @@ def load_existing_character(name):
             char["kills-"+race] = 0
     if "sentry" in themes[THEME]["Special"] and not "kills-sentry" in char:
         char["kills-sentry"] = 0
+    char["savefile"] = os.path.splitext(os.path.basename(name))[0]
     player_character = char
     load_ship_graphics()
 
@@ -1228,16 +1229,19 @@ def save_character():
         char["battle-settings"] = battle_settings
         del char["rank"]
         del char["bonus"]
+        if "savefile" in char:
+            del char["savefile"]
         file = os.path.join(SAVE_FOLDER, text+".chr")
         if not os.path.exists(SAVE_FOLDER):
             os.mkdir(SAVE_FOLDER)
         with open(file, "w") as f:
             yaml.safe_dump(char, f, indent=4)
+        player_character["savefile"] = text
         global message_box
         message_box = Messagebox(load_text("character-saved"), infofont)
         campaign_menu()
 
-    text_entry = TextEntry(load_text("save-character-prompt"), player_character["name"], callback)
+    text_entry = TextEntry(load_text("save-character-prompt"), (player_character["name"] if not "savefile" in player_character else player_character["savefile"]), callback)
 
 
 def campaign_menu():
