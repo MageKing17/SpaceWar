@@ -1690,7 +1690,7 @@ while True:
                                 bonus += 5
                                 player_character["rank"] = RANK_PROMOTE[player_character["rank"]]
                             if bonus:
-                                text += "\n\n" + load_text("promotion").format(rank=player_character["rank"], bonus=bonus)
+                                text += "\n\n" + load_text("promotion").format(rank=load_text("rank-"+player_character["rank"]), bonus=bonus)
                                 player_character["bonus"] += bonus
                         message_box = Messagebox(text, infofont)
                         game_over = True
