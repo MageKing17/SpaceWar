@@ -1214,7 +1214,7 @@ def save_character():
     global text_entry
 
     def callback(text):
-        char = player_character.copy()
+        char = dict(**player_character)
         char["battle-settings"] = battle_settings
         del char["rank"]
         del char["bonus"]
