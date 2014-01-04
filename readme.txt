@@ -1,7 +1,7 @@
                                     SpaceWar
-                                    v0.7.2.2
+                                    v0.7.2.3
                         February "1 Game A Month" entry
-                              © 2013 by MageKing17
+                           © 2013-2014 by MageKing17
                               MageKing17@gmail.com
 
 ################################################################################
@@ -128,6 +128,31 @@ v0.7.2.2 - GitHub Version
     content.
   ? While I was at it, slightly fixed up a couple alignment issues in the
     localization file.
+
+v0.7.2.3 - "Oh Right, This Thing Still Exists" Version - January 4th, 2014
+  ? Reformatted source code with the flake8 linter to make it less messy.
+  ! Fixed divide-by-zero error if firing a Torpedo at your currently-occupied
+    hex.
+  ! Fixed potential similar (but not exactly the same, because that error was
+    already fixed) error with firing phasers at a point very close to your
+    current location.
+  ! Fixed the name of your rank not being localized in the promotion text.
+  ? Changed how the current user's ship is referenced for potential future
+    multiplayer functionality.
+  + Instant Action now recognizes multiple "random" selection items, just like
+    campaign characters do.
+  ? When moving your ship perfectly diagonally, the game will now prefer
+    displaying the ship as up/down instead of left/right.
+  ? Save files no longer remember what order keys were stored in.
+  ? Save files no longer always track sentry kills, even for themes without
+    sentry guns.
+  ? Refactored rank code to be less redundant.
+  + Can now cancel saving your character and editing your character/ship name by
+    hitting escape (previously pretended you hit enter with the starting value,
+    which isn't very useful in hindsight).
+  ? Save character dialogue now defaults to the filename of the savefile loaded
+    (if it was loaded, and not a new character) instead of the name of the
+    character.
 
 ################################################################################
 
