@@ -837,7 +837,7 @@ def ia_choose_theme(theme):
         THEME = theme
         races = tuple(themes[THEME]["Races"])
         load_ship_graphics()
-        return SelectionList(load_text("instant-action-race select"), *[(race.capitalize(), ia_make_player(race)) for race in races]+[(load_text("special-option-random"), ia_make_player(random.choice(races)))])
+        return SelectionList(load_text("instant-action-race select"), *[(load_text(race), ia_make_player(race)) for race in races]+[(load_text("special-option-"+special_random), ia_make_player(random.choice(special_selection))) for special_random, special_selection in themes[THEME]["Special"].items() if isinstance(special_selection, tuple)])
     return callback
 
 
@@ -867,7 +867,7 @@ def ia_choose_opponents(num):
     def callback(num=num):
         global num_enemies
         num_enemies = num
-        return SelectionList(load_text("instant-action-ai race").format(len(ship_list)), *[(race.capitalize(), ia_make_enemy(race)) for race in races]+[(load_text("special-option-random"), ia_make_enemy(random.choice(races)))])
+        return SelectionList(load_text("instant-action-ai race").format(len(ship_list)), *[(load_text(race), ia_make_enemy(race)) for race in races]+[(load_text("special-option-"+special_random), ia_make_enemy(random.choice(special_selection))) for special_random, special_selection in themes[THEME]["Special"].items() if isinstance(special_selection, tuple)])
     return callback
 
 
@@ -897,7 +897,7 @@ def ia_make_enemy(race):
         ship_list.append(enemy)
         match_stats[enemy] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0}
         if len(ship_list) <= num_enemies:
-            return SelectionList(load_text("instant-action-ai race").format(len(ship_list)), *[(load_text(new_race), ia_make_enemy(new_race)) for new_race in races]+[(load_text("special-option-sentry"), ia_make_enemy("sentry"))]+[(load_text("special-option-random"), ia_make_enemy(random.choice(races)))])
+            return SelectionList(load_text("instant-action-ai race").format(len(ship_list)), *[(load_text(new_race), ia_make_enemy(new_race)) for new_race in races]+([(load_text("special-option-sentry"), ia_make_enemy("sentry"))] if True else [])+[(load_text("special-option-"+special_random), ia_make_enemy(random.choice(special_selection))) for special_random, special_selection in themes[THEME]["Special"].items() if isinstance(special_selection, tuple)])
         elif team_game and not any([True for ship in ship_list if not ship.type == ship_list[0].type]):
             global message_box
             team_game = False
