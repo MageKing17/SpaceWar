@@ -1221,6 +1221,7 @@ def save_character():
     global text_entry
 
     def callback(text=None):
+        global message_box
         if not text:
             message_box = Messagebox(load_text("character-not-saved"), infofont)
             campaign_menu()
@@ -1237,7 +1238,6 @@ def save_character():
         with open(file, "w") as f:
             yaml.safe_dump(char, f, indent=4)
         player_character["savefile"] = text
-        global message_box
         message_box = Messagebox(load_text("character-saved"), infofont)
         campaign_menu()
 
