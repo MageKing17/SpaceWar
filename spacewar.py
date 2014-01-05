@@ -126,43 +126,44 @@ if WINDOW_SIZE == (800, 480):
     FULLSCREEN = True
 WINDOW_MULTIPLIER = min((WINDOW_SIZE[0] - (0 if FULLSCREEN else 20)) // 160, (WINDOW_SIZE[1] - (0 if FULLSCREEN else 20)) // 160)
 
-INI_DEFAULTS = (
-               ('Window', 'Caption', 'SpaceWar'),
-               ('Window', 'Icon', os.path.join('data', 'icon.png')),
-               ('Data Files', 'Sound folder', os.path.join('data', 'sound')),
-               ('Data Files', 'Theme folder', os.path.join('data', 'themes')),
-               ('Data Files', 'Character folder', os.path.join('data', 'saves')),
-               ('Data Files', 'Localization file', os.path.join('data', 'English.txt')),
-               ('Data Files', 'Settings file', 'settings.cfg'),
-)
+INI_DEFAULTS = OrderedDict((
+    ('Window', OrderedDict((
+        ('Caption', 'SpaceWar'),
+        ('Icon', os.path.join('data', 'icon.png')),
+    ))),
+    ('Data Files', OrderedDict((
+        ('Sound folder', os.path.join('data', 'sound')),
+        ('Theme folder', os.path.join('data', 'themes')),
+        ('Character folder', os.path.join('data', 'saves')),
+        ('Localization file', os.path.join('data', 'English.txt')),
+        ('Settings file', 'settings.cfg'),
+    ))),
+))
 
-SETTINGS_DEFAULTS = (
-                    ('Window', 'Scaling multiplier', repr(WINDOW_MULTIPLIER)),
-                    ('Window', 'Fullscreen', repr(FULLSCREEN)),
-                    ('Window', 'Font size', '16'),
-                    ('Audio', 'Sound enabled', 'True'),
-                    ('Audio', 'Sound volume', '100'),
-                    ('Gameplay', 'Classic collisions', 'True'),
-                    ('Gameplay', 'White-on-black', 'False'),
-)
+SETTINGS_DEFAULTS = OrderedDict((
+    ('Window', OrderedDict((
+        ('Scaling multiplier', repr(WINDOW_MULTIPLIER)),
+        ('Fullscreen', repr(FULLSCREEN)),
+        ('Font size', '16'),
+    ))),
+    ('Audio', OrderedDict((
+        ('Sound enabled', 'True'),
+        ('Sound volume', '100'),
+    ))),
+    ('Gameplay', OrderedDict((
+        ('Classic collisions', 'True'),
+        ('White-on-black', 'False'),
+    ))),
+))
 
 INI_FILE = 'spacewar.ini'
 
-
-def fill_in_defaults(defaults, parser):
-    for section, option, value in defaults:
-        if not parser.has_option(section, option):
-            if not parser.has_section(section):
-                parser.add_section(section)
-            parser.set(section, option, value)
-
 CONFIG = configparser.SafeConfigParser(dict_type=OrderedDict)
+CONFIG.read_dict(INI_DEFAULTS)
 
 if os.path.exists(INI_FILE):
     CONFIG.read(INI_FILE)
-    fill_in_defaults(INI_DEFAULTS, CONFIG)
 else:
-    fill_in_defaults(INI_DEFAULTS, CONFIG)
     with open(INI_FILE, "w") as f:
         CONFIG.write(f)
 
@@ -175,12 +176,11 @@ TEXT_FILE = CONFIG.get('Data Files', 'Localization file')
 SETTINGS_FILE = CONFIG.get('Data Files', 'Settings file')
 
 SETTINGS = configparser.SafeConfigParser(dict_type=OrderedDict)
+SETTINGS.read_dict(SETTINGS_DEFAULTS)
 
 if os.path.exists(SETTINGS_FILE):
     SETTINGS.read(SETTINGS_FILE)
-    fill_in_defaults(SETTINGS_DEFAULTS, SETTINGS)
 else:
-    fill_in_defaults(SETTINGS_DEFAULTS, SETTINGS)
     with open(SETTINGS_FILE, "w") as f:
         SETTINGS.write(f)
 
