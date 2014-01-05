@@ -1,4 +1,4 @@
-﻿<theme-sbiti>
+<theme-sbiti>
 Space: Battles in the Infinite
 <terran>
 Terran
