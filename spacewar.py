@@ -144,7 +144,7 @@ SETTINGS_DEFAULTS = OrderedDict((
     ('Window', OrderedDict((
         ('Scaling multiplier', repr(WINDOW_MULTIPLIER)),
         ('Fullscreen', repr(FULLSCREEN)),
-        ('Font size', '16'),
+        ('Font size', '16' if WINDOW_MULTIPLIER > 4 else '12'),
     ))),
     ('Audio', OrderedDict((
         ('Sound enabled', 'True'),
