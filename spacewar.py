@@ -21,8 +21,19 @@ import yaml_modifier    # noqa
 
 if sys.version_info[0] < 3:
     import ConfigParser as configparser
+
+    #py2 doesn't have read_dict(), so compensate
+    def read_dict(parser, dct):
+        for section, options in dct.items():
+            if not parser.has_section(section):
+                parser.add_section(section)
+            for option, value in options.items():
+                parser.set(section, option, value)
 else:
     import configparser
+
+    def read_dict(parser, dct):
+        parser.read_dict(dct)
 
 try:
     from collections import OrderedDict
@@ -159,7 +170,7 @@ SETTINGS_DEFAULTS = OrderedDict((
 INI_FILE = 'spacewar.ini'
 
 CONFIG = configparser.SafeConfigParser(dict_type=OrderedDict)
-CONFIG.read_dict(INI_DEFAULTS)
+read_dict(CONFIG, INI_DEFAULTS)
 
 if os.path.exists(INI_FILE):
     CONFIG.read(INI_FILE)
@@ -176,7 +187,7 @@ TEXT_FILE = CONFIG.get('Data Files', 'Localization file')
 SETTINGS_FILE = CONFIG.get('Data Files', 'Settings file')
 
 SETTINGS = configparser.SafeConfigParser(dict_type=OrderedDict)
-SETTINGS.read_dict(SETTINGS_DEFAULTS)
+read_dict(SETTINGS, SETTINGS_DEFAULTS)
 
 if os.path.exists(SETTINGS_FILE):
     SETTINGS.read(SETTINGS_FILE)
