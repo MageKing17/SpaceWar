@@ -345,9 +345,10 @@ def load_ship_graphics():
         ships[race] = load_image(os.path.join(folder, image), colorkey)
         if "cloaked" in data:
             ships["cloaked-"+race] = load_image(os.path.join(folder, data["cloaked"]), colorkey)
-    data = themes[THEME]["Special"]["sentry"]
-    image, folder, colorkey = data["image"], data["folder"], data["colorkey"]
-    ships["sentry"] = load_image(os.path.join(folder, image), colorkey)
+    data = themes[THEME]["Special"].get("sentry", None)
+    if data:
+        image, folder, colorkey = data["image"], data["folder"], data["colorkey"]
+        ships["sentry"] = load_image(os.path.join(folder, image), colorkey)
 
 try:
     pygame.mixer.init(44100, buffer=1024)
@@ -912,7 +913,7 @@ def ia_make_enemy(race):
         ship_list.append(enemy)
         match_stats[enemy] = {"damage": 0, "teamdamage": 0, "victory": 0, "rank": 0}
         if len(ship_list) <= num_enemies:
-            return SelectionList(load_text("instant-action-ai race").format(len(ship_list)), *[(load_text(new_race), ia_make_enemy(new_race)) for new_race in races]+([(load_text("special-option-sentry"), ia_make_enemy("sentry"))] if True else [])+[(load_text("special-option-"+special_random), ia_make_enemy(random.choice(special_selection))) for special_random, special_selection in themes[THEME]["Special"].items() if isinstance(special_selection, tuple)])
+            return SelectionList(load_text("instant-action-ai race").format(len(ship_list)), *[(load_text(new_race), ia_make_enemy(new_race)) for new_race in races]+([(load_text("special-option-sentry"), ia_make_enemy("sentry"))] if "sentry" in themes[THEME]["Special"] else [])+[(load_text("special-option-"+special_random), ia_make_enemy(random.choice(special_selection))) for special_random, special_selection in themes[THEME]["Special"].items() if isinstance(special_selection, tuple)])
         elif team_game and not any([True for ship in ship_list if not ship.type == ship_list[0].type]):
             global message_box
             team_game = False
@@ -984,8 +985,12 @@ def load_existing_character(name):
     for race in races:
         if not "kills-"+race in char:
             char["kills-"+race] = 0
-    if "sentry" in themes[THEME]["Special"] and not "kills-sentry" in char:
-        char["kills-sentry"] = 0
+    if "sentry" in themes[THEME]["Special"]:
+        if not "kills-sentry" in char:
+            char["kills-sentry"] = 0
+    else:
+        if "kills-sentry" in char:
+            del char["kills-sentry"]
     char["savefile"] = os.path.splitext(os.path.basename(name))[0]
     player_character = char
     load_ship_graphics()
