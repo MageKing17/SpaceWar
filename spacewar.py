@@ -40,8 +40,6 @@ try:
 except ImportError:
     from ordereddict import OrderedDict
 
-pygame.mixer.pre_init(44100, buffer=1024)
-
 SCREEN_SIZE = 160, 160
 FULLSCREEN = False
 PIXEL_PERFECT = False
@@ -129,7 +127,7 @@ def playsound(sound):
         SOUND_LIST[sound].set_volume(SOUND_VOLUME / 100)
         SOUND_LIST[sound].play()
 
-pygame.init()
+pygame.display.init()
 
 WINDOW_SIZE = pygame.display.Info()
 WINDOW_SIZE = WINDOW_SIZE.current_w, WINDOW_SIZE.current_h
@@ -350,6 +348,11 @@ def load_ship_graphics():
     data = themes[THEME]["Special"]["sentry"]
     image, folder, colorkey = data["image"], data["folder"], data["colorkey"]
     ships["sentry"] = load_image(os.path.join(folder, image), colorkey)
+
+try:
+    pygame.mixer.init(44100, buffer=1024)
+except pygame.error:
+    SOUND_ENABLED = False
 
 if FULLSCREEN:
     display = pygame.display.set_mode(WINDOW_SIZE, pygame.FULLSCREEN)
@@ -792,6 +795,8 @@ class CommandBox(object):
             self.screen.blit(self.act_button, self.act_button_rect)
         self.screen.blit(self.okay_button, self.okay_button_rect)
         self.screen.blit(self.cancel_button, self.cancel_button_rect)
+
+pygame.font.init()
 
 font = pygame.font.SysFont("Courier New,Liberation Mono", 12)
 infofont = pygame.font.SysFont("Courier New,Liberation Mono", FONT_SIZE, bold=True)
