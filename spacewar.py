@@ -842,6 +842,7 @@ torpedo_list = []
 rapid_end = False
 game_over = False
 quit = False
+just_saved = False
 command_box = None
 battle_settings = [False, (RANKS[0], "random"), None, None]
 num_enemies = 1
@@ -975,7 +976,7 @@ def load_existing_character(name):
             raise InvalidCharacterError("can't have {0!r} bonus points".format(char["bonus"]))
         global battle_settings
         battle_settings = list(char["battle-settings"])
-    global player_character, THEME, races
+    global player_character, THEME, races, just_saved
     THEME = char["theme"]
     races = tuple(themes[THEME]["Races"])
     if STRICT_STATS:
@@ -996,11 +997,12 @@ def load_existing_character(name):
             del char["kills-sentry"]
     char["savefile"] = os.path.splitext(os.path.basename(name))[0]
     player_character = char
+    just_saved = True   # I know, we technically loaded rather than saved, but if a player just loaded a file, there's nothing new to save (so returning to the main menu shouldn't come with a warning).
     load_ship_graphics()
 
 
 def start_battle():
-    global message_box, home_player
+    global message_box, home_player, just_saved
     if not any([True for ai in battle_settings[1:] if ai and not ai == "sentry"]):
         message_box = Messagebox(load_text("no-players"), infofont)
         return selection_list
@@ -1060,11 +1062,14 @@ def start_battle():
     if team_game and not any([True for ship in ship_list if not ship.type == "sentry" and not ship.type == ship_list[0].type]):
         team_game = False
         message_box = Messagebox(load_text("cancel-team-game"), infofont)
+    just_saved = False
 
 
 def add_ai_slot(num):
     def callback(num=num):
         battle_settings[num] = (RANKS[0], "random")
+        global just_saved
+        just_saved = False
         return change_ai_setting(num)()
     return callback
 
@@ -1072,6 +1077,8 @@ def add_ai_slot(num):
 def add_sentry_gun(num):
     def callback(num=num):
         battle_settings[num] = "sentry"
+        global just_saved
+        just_saved = False
         return change_ai_setting(num)()
     return callback
 
@@ -1079,6 +1086,8 @@ def add_sentry_gun(num):
 def remove_ai_slot(num):
     def callback(num=num):
         battle_settings[num] = None
+        global just_saved
+        just_saved = False
         return change_ai_setting(num)()
     return callback
 
@@ -1088,6 +1097,8 @@ def change_ai_rank(num):
         def make_callback(rank):
             def set_rank(rank=rank):
                 battle_settings[num] = (rank, battle_settings[num][1])
+                global just_saved
+                just_saved = False
                 return change_ai_setting(num)()
             return set_rank
         return SelectionList(load_text("menu-choose rank"), *[(load_text("rank-"+rank), make_callback(rank)) for rank in RANKS])
@@ -1099,6 +1110,8 @@ def change_ai_race(num):
         def make_callback(race):
             def set_race(race=race):
                 battle_settings[num] = (battle_settings[num][0], race)
+                global just_saved
+                just_saved = False
                 return change_ai_setting(num)()
             return set_race
         return SelectionList(load_text("menu-choose race"), *[(load_text(race), make_callback(race)) for race in races] + [(load_text("special-option-"+option), make_callback(option)) for option in themes[THEME]["Special"] if not option == "sentry"])
@@ -1119,6 +1132,8 @@ def change_ai_setting(num):
 
 def change_team_setting():
     battle_settings[0] = not battle_settings[0]
+    global just_saved
+    just_saved = False
     return battle_setup()
 
 
@@ -1142,6 +1157,8 @@ def change_captain_name():
     def callback(text=None):
         if text:
             player_character["name"] = text
+            global just_saved
+            just_saved = False
         player_setup()
 
     text_entry = TextEntry(load_text("player-setup-change name"), player_character["name"], callback)
@@ -1153,6 +1170,8 @@ def change_ship_name():
     def callback(text=None):
         if text:
             player_character["ship"] = text
+            global just_saved
+            just_saved = False
         player_setup()
 
     text_entry = TextEntry(load_text("player-setup-change ship"), player_character["ship"], callback)
@@ -1162,6 +1181,8 @@ def change_race():
     def make_callback(race):
         def callback(race=race):
             player_character["race"] = race
+            global just_saved
+            just_saved = False
             return player_setup()
         return callback
     return SelectionList(load_text("player-setup-choose race"), *[(load_text(race), make_callback(race)) for race in races] + [(load_text("special-option-"+option), make_callback(option)) for option in themes[THEME]["Special"] if not option == "sentry"])
@@ -1178,11 +1199,15 @@ def player_setup():
             def increase_stat():
                 player_character["bonus"] -= 1
                 player_character[stat] += data["step"]
+                global just_saved
+                just_saved = False
                 return callback()
 
             def decrease_stat():
                 player_character["bonus"] += 1
                 player_character[stat] -= data["step"]
+                global just_saved
+                just_saved = False
                 return callback()
 
             if player_character["bonus"] and player_character[stat] < data["max"]:
@@ -1236,6 +1261,8 @@ def view_statistics():
                 player_character[stat] = 0
             for stat in [key for key in player_character if key.startswith("kills-")]:
                 player_character[stat] = 0
+            global just_saved
+            just_saved = False
             return campaign_menu()
         return SelectionList(load_text("menu-stats-reset-confirm"), (load_text("menu-yes"), reset_callback), (load_text("menu-no"), view_statistics))
 
@@ -1246,7 +1273,7 @@ def save_character():
     global text_entry
 
     def callback(text=None):
-        global message_box
+        global message_box, just_saved
         if not text:
             message_box = Messagebox(load_text("character-not-saved"), infofont)
             campaign_menu()
@@ -1264,6 +1291,7 @@ def save_character():
             yaml.safe_dump(char, f, indent=4)
         player_character["savefile"] = text
         message_box = Messagebox(load_text("character-saved"), infofont)
+        just_saved = True
         campaign_menu()
 
     text_entry = TextEntry(load_text("save-character-prompt"), (player_character["name"] if not "savefile" in player_character else player_character["savefile"]), callback)
@@ -1271,7 +1299,7 @@ def save_character():
 
 def campaign_menu():
     global selection_list
-    selection_list = SelectionList(load_text("menu-campaign-title").format(**player_character), (load_text("menu-battle-setup"), battle_setup), (load_text("menu-player-setup"), player_setup), (load_text("menu-view-statistics"), view_statistics), (load_text("menu-save-character"), save_character), (load_text("menu-return-main menu"), main_menu_confirm))
+    selection_list = SelectionList(load_text("menu-campaign-title").format(**player_character), (load_text("menu-battle-setup"), battle_setup), (load_text("menu-player-setup"), player_setup), (load_text("menu-view-statistics"), view_statistics), (load_text("menu-save-character"), save_character), (load_text("menu-return-main menu"), (main_menu if just_saved else main_menu_confirm)))
     return selection_list
 
 
