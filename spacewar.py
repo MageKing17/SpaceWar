@@ -162,6 +162,7 @@ SETTINGS_DEFAULTS = OrderedDict((
     ('Gameplay', OrderedDict((
         ('Classic collisions', 'True'),
         ('White-on-black', 'False'),
+        ('Strict character stats', 'False'),
     ))),
 ))
 
@@ -202,6 +203,7 @@ PIXEL_PERFECT = SETTINGS.getboolean('Gameplay', 'Classic collisions')
 if SETTINGS.getboolean('Gameplay', 'White-on-black'):
     FOREGROUND = (255, 255, 255)
     BACKGROUND = (0,   0,   0)
+STRICT_STATS = SETTINGS.getboolean('Gameplay', 'Strict character stats')
 
 WINDOW_SIZE = SCREEN_SIZE[0] * WINDOW_MULTIPLIER, SCREEN_SIZE[1] * WINDOW_MULTIPLIER
 
@@ -976,19 +978,20 @@ def load_existing_character(name):
     global player_character, THEME, races
     THEME = char["theme"]
     races = tuple(themes[THEME]["Races"])
-    for stat in list(char):
-        if not stat.startswith("kills-") or stat == "kills-sentry":
-            continue
-        race = stat[6:]
-        if race not in races:
-            del char[stat]
+    if STRICT_STATS:
+        for stat in list(char):
+            if not stat.startswith("kills-") or stat == "kills-sentry":
+                continue
+            race = stat[6:]
+            if race not in races:
+                del char[stat]
     for race in races:
         if not "kills-"+race in char:
             char["kills-"+race] = 0
     if "sentry" in themes[THEME]["Special"]:
         if not "kills-sentry" in char:
             char["kills-sentry"] = 0
-    else:
+    elif STRICT_STATS:
         if "kills-sentry" in char:
             del char["kills-sentry"]
     char["savefile"] = os.path.splitext(os.path.basename(name))[0]
