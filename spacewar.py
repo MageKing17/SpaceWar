@@ -1710,7 +1710,7 @@ while True:
                                     continue
                                 player_character[stat] += stats[stat]
                             player_character["average points"] = (player_character["average points"] * player_character["games played"] + stats["total"]) / (player_character["games played"] + 1)
-                            player_character["average shields"] = (player_character["average shields"] * player_character["games played"] + ship.shields) / (player_character["games played"] + 1)
+                            player_character["average shields"] = (player_character["average shields"] * player_character["games played"] + home_player.shields) / (player_character["games played"] + 1)
                             player_character["games played"] += 1
                             player_character["xp"] += stats["total"]
                             bonus = 0
