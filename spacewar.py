@@ -1196,7 +1196,8 @@ def view_statistics():
     torpedo_percent = ("0%" if player_character["torpedoes shot"] == 0 else "{0:.2%}".format(player_character["torpedoes hit"] / player_character["torpedoes shot"]))
     text = text.format(next=next, phaser_percent=phaser_percent, torpedo_percent=torpedo_percent, **player_character)
     text += "\n" + load_text("kill-count-prefix")
-    killstats = [(load_text(stat[6:])+": ", value) for stat, value in player_character.items() if stat.startswith("kills-")]
+    race_list = races + (("sentry",) if "sentry" in themes[THEME]["Special"] else ())
+    killstats = [(load_text(race)+": ", player_character["kills-"+race]) for race in race_list]
     col1, col2 = killstats[:len(killstats)//2], killstats[len(killstats)//2:]
     if len(killstats) % 2:
         col1.insert(0, None)
